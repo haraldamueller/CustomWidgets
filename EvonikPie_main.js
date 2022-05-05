@@ -14,25 +14,36 @@ var getScriptPromisify = (src) => {
     `
   class EvonikPieChart extends HTMLElement {
     constructor () {
-      super()
+		console.log("> EvonikPieChart.constructor called");
+		super()
 
-      this._shadowRoot = this.attachShadow({ mode: 'open' })
-      this._shadowRoot.appendChild(prepared.content.cloneNode(true))
+		this._shadowRoot = this.attachShadow({ mode: 'open' })
+		this._shadowRoot.appendChild(prepared.content.cloneNode(true))
 
-      this._root = this._shadowRoot.getElementById('root')
+		this._root = this._shadowRoot.getElementById('root')
 
 		this.addEventListener("click", event => {
-				var event = new Event("onClick");
-				this.dispatchEvent(event);
+			var event = new Event("onClick");
+			this.dispatchEvent(event);
 		});
 
-      this._props = {}
+		this._props = {}
 
-      this.render()
+		this.render()
     }
 
     onCustomWidgetResize (width, height) {
-      this.render()
+		console.log("> onCustomWidgetResize()");
+		this.render()
+    }
+
+
+    onCustomWidgetBeforeUpdate (oChangedProperties)) {
+		console.log("> onCustomWidgetBeforeUpdate("+oChangedProperties)+")");
+    }
+
+    onCustomWidgetAfterUpdate (oChangedProperties)) {
+		console.log("> onCustomWidgetAfterUpdate("+oChangedProperties)+")");
     }
 
 
@@ -42,7 +53,7 @@ var getScriptPromisify = (src) => {
     }
 
     async render () {
-  	  console.log(">> render() - HM");
+  	  console.log(">> render()");
       await getScriptPromisify('https://cdn.bootcdn.net/ajax/libs/echarts/5.0.0/echarts.min.js')
 
       if (!this._myDataSource || this._myDataSource.state !== 'success') {
@@ -54,7 +65,9 @@ var getScriptPromisify = (src) => {
 		// Added by HM now:
 		console.log("-- render() - _myDataSource is defined now!");
 		
-		// Loop through dimensions:
+		try {
+
+			// Loop through dimensions:
 			for (const feedEntry of this._myDataSource.metadata.feeds.dimensions.values) {
 				//const dimensionEntry = '${d[feedEntry].label}';
 				const dimensionEntryId = this._myDataSource.metadata.dimensions[feedEntry].id;
@@ -62,34 +75,37 @@ var getScriptPromisify = (src) => {
 				console.log("- Dimension feedEntry "+feedEntry+" has dimensionEntryId: "+dimensionEntryId+", dimensionEntryDescr: "+dimensionEntryDescr);
 			}
 		
-		// Loop through measures:
+			// Loop through measures:
 			for (const feedEntry of this._myDataSource.metadata.feeds.measures.values) {
 				const measureId = this._myDataSource.metadata.mainStructureMembers[feedEntry].id;
 				const measureLabel = this._myDataSource.metadata.mainStructureMembers[feedEntry].label;
 				//const measureEntry = '${measureLabel} ${d[feedEntry].raw || d[feedEntry].formatted}';
-				console.log("- Measure feedEntry: "+feedEntry+" has measureLabel: "+measureLabel+", measureEntry: "+measureEntry);
+				console.log("- Measure feedEntry: "+feedEntry+" has measureId: "+measureId+", measureLabel: "+measureLabel);
 			}
 
-		// Loop though data:
-		for (const d of this._myDataSource.data) {
+			// Loop though data:
+			for (const d of this._myDataSource.data) {
 
-			console.log("-- Data "+d+" has follwing entries:");
-			
-			for (const feedEntryDim of this._myDataSource.metadata.feeds.dimensions.values) {
-				const dimValId = d[feedEntryDim].id;
-				const dimValLabel = d[feedEntryDim].label;
+				console.log("-- Data "+d+" has follwing entries:");
 				
-				console.log("--- Dimension feedEntry "+feedEntryDim+" has dimValId: "+dimValId+", dimValLabel: "+dimValLabel);
-			}
-			
-			for (const feedEntryMeas of this._myDataSource.metadata.feeds.measures.values) {
-				const measValRaw = d[feedEntryMeas].raw;
-				const measValFormatted = d[feedEntryMeas].formatted;
+				for (const feedEntryDim of this._myDataSource.metadata.feeds.dimensions.values) {
+					const dimValId = d[feedEntryDim].id;
+					const dimValLabel = d[feedEntryDim].label;
+					
+					console.log("--- Dimension feedEntry "+feedEntryDim+" has dimValId: "+dimValId+", dimValLabel: "+dimValLabel);
+				}
 				
-				console.log("--- Measure feedEntry "+feedEntryMeas+" has measValRaw: "+measValRaw+", measValFormatted: "+measValFormatted);
+				for (const feedEntryMeas of this._myDataSource.metadata.feeds.measures.values) {
+					const measValRaw = d[feedEntryMeas].raw;
+					const measValFormatted = d[feedEntryMeas].formatted;
+					
+					console.log("--- Measure feedEntry "+feedEntryMeas+" has measValRaw: "+measValRaw+", measValFormatted: "+measValFormatted);
+				}
 			}
 		}
-
+		catch (e) {
+			console.error("!! Exception occured: "+e);
+		}
    
       // This picks out the first dimension and the first measure and creates the dataset (data) out of it for displaying on the chart:
 	  const dimension = this._myDataSource.metadata.feeds.dimensions.values[0]
