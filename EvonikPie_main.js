@@ -46,12 +46,13 @@ var getScriptPromisify = (src) => {
       await getScriptPromisify('https://cdn.bootcdn.net/ajax/libs/echarts/5.0.0/echarts.min.js')
 
       if (!this._myDataSource || this._myDataSource.state !== 'success') {
+		console.log("!! render() - _myDataSource is NOT defined yet!");
         return
       }
 	  
 
 		// Added by HM now:
-		console.log("-- render() - _myDataSource is defined!");
+		console.log("-- render() - _myDataSource is defined now!");
 		
 		// Loop though data:
 		for (const d of this._myDataSource.data) {
@@ -63,8 +64,8 @@ var getScriptPromisify = (src) => {
 			}
 		
 			// Loop through measures:
-			for (const feedEntry of metadata.feeds.measures.values) {
-				const measureLabel = metadata.minStructureMembers[feedEntry].label;
+			for (const feedEntry of this._myDataSource.metadata.feeds.measures.values) {
+				const measureLabel = this._myDataSource.metadata.mainStructureMembers[feedEntry].label;
 				const measureEntry = '${measureLabel} ${d[feedEntry].raw || d[feedEntry].formatted}';
 				console.log("- measureLabel: "+measureLabel+", measureEntry: "+measureEntry);
 			}
