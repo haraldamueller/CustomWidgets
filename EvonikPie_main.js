@@ -44,17 +44,15 @@ var getScriptPromisify = (src) => {
         return
       }
 	  
-	  console.log("!!! HM added things here in render()...");
-
 
 		// Added by HM now:
 		console.log("!!! HM added things here in render()...");
 		
 		// Loop though data:
-		for (const d of this.myDataSource.data) {
+		for (const d of this._myDataSource.data) {
 		
 			// Loop through dimensions:
-			for (const feedEntry of this.myDataSource.metadata.feeds.dimensions.values) {
+			for (const feedEntry of this._myDataSource.metadata.feeds.dimensions.values) {
 				const dimensionEntry = '${d[feedEntry].label}';
 				console.log("- DimensionEntry: "+dimensionEntry);
 			}
