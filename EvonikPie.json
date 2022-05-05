@@ -6,12 +6,13 @@
   "version": "1.0.0",
   "name": "Evonik PieChart",
   "newInstancePrefix": "EvonikPieChart",
+  "icon": "https://haraldamueller.github.io/CustomWidgets/EvonikPie.png",
   "description": "Evonik-style Pie Chart",
   "webcomponents": [
     {
       "kind": "main",
       "tag": "com-sap-sample-evonik-pie_chart",
-      "url": "https://github.com/haraldamueller/CustomWidgets/EvonikPie_main.js",
+      "url": "https://haraldamueller.github.io/CustomWidgets/EvonikPie_main.js",
       "integrity": "",
       "ignoreIntegrity": true
     }
@@ -25,7 +26,7 @@
 			"type": "integer",
 			"default": 420
 		},
-    "dimensionFeed": {
+		"dimensionFeed": {
 			"type": "string[]",
 			"default": []
 		},
@@ -33,11 +34,11 @@
 			"type": "string[]",
 			"default": []
 		},
-    "caption": {
-  		"type": "string",
-  		"description": "The caption of the pie chart",
-  		"default": ""
-  	}
+		"caption": {
+			"type": "string",
+			"description": "The caption of the pie chart",
+			"default": ""
+		}
   },
   "dataBindings": {
 		"myDataSource": {
