@@ -21,6 +21,11 @@ var getScriptPromisify = (src) => {
 
       this._root = this._shadowRoot.getElementById('root')
 
+		this.addEventListener("click", event => {
+				var event = new Event("onClick");
+				this.dispatchEvent(event);
+		});
+
       this._props = {}
 
       this.render()
@@ -31,7 +36,7 @@ var getScriptPromisify = (src) => {
     }
 
 
-      set myDataSource (dataBinding) {
+    set myDataSource (dataBinding) {
       this._myDataSource = dataBinding
       this.render()
     }
@@ -46,7 +51,7 @@ var getScriptPromisify = (src) => {
 	  
 
 		// Added by HM now:
-		console.log("!!! HM added things here in render()...");
+		console.log("-- render() - _myDataSource is defined!");
 		
 		// Loop though data:
 		for (const d of this._myDataSource.data) {
@@ -77,7 +82,16 @@ var getScriptPromisify = (src) => {
 
       const myChart = echarts.init(this._root, 'wight')
       const option = {
-        tooltip: {
+/*		   title: {
+			text: 'Customized Pie',
+			left: 'center',
+			top: 20,
+			textStyle: {
+			  color: '#000'
+			}
+		  },
+*/
+       tooltip: {
           trigger: 'item'
         },
         legend: {
