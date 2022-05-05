@@ -38,12 +38,12 @@ var getScriptPromisify = (src) => {
     }
 
 
-    onCustomWidgetBeforeUpdate (oChangedProperties)) {
-		console.log("> onCustomWidgetBeforeUpdate("+oChangedProperties)+")");
+    onCustomWidgetBeforeUpdate (oChangedProperties) {
+		console.log("> onCustomWidgetBeforeUpdate("+oChangedProperties+")");
     }
 
-    onCustomWidgetAfterUpdate (oChangedProperties)) {
-		console.log("> onCustomWidgetAfterUpdate("+oChangedProperties)+")");
+    onCustomWidgetAfterUpdate (oChangedProperties) {
+		console.log("> onCustomWidgetAfterUpdate("+oChangedProperties+")");
     }
 
 
