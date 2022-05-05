@@ -54,25 +54,45 @@ var getScriptPromisify = (src) => {
 		// Added by HM now:
 		console.log("-- render() - _myDataSource is defined now!");
 		
-		// Loop though data:
-		for (const d of this._myDataSource.data) {
-		
-			// Loop through dimensions:
+		// Loop through dimensions:
 			for (const feedEntry of this._myDataSource.metadata.feeds.dimensions.values) {
-				const dimensionEntry = '${d[feedEntry].label}';
-				console.log("- DimensionEntry: "+dimensionEntry);
+				//const dimensionEntry = '${d[feedEntry].label}';
+				const dimensionEntryId = this._myDataSource.metadata.dimensions[feedEntry].id;
+				const dimensionEntryDescr = this._myDataSource.metadata.dimensions[feedEntry].description;
+				console.log("- Dimension feedEntry "+feedEntry+" has dimensionEntryId: "+dimensionEntryId+", dimensionEntryDescr: "+dimensionEntryDescr);
 			}
 		
-			// Loop through measures:
+		// Loop through measures:
 			for (const feedEntry of this._myDataSource.metadata.feeds.measures.values) {
+				const measureId = this._myDataSource.metadata.mainStructureMembers[feedEntry].id;
 				const measureLabel = this._myDataSource.metadata.mainStructureMembers[feedEntry].label;
-				const measureEntry = '${measureLabel} ${d[feedEntry].raw || d[feedEntry].formatted}';
-				console.log("- measureLabel: "+measureLabel+", measureEntry: "+measureEntry);
+				//const measureEntry = '${measureLabel} ${d[feedEntry].raw || d[feedEntry].formatted}';
+				console.log("- Measure feedEntry: "+feedEntry+" has measureLabel: "+measureLabel+", measureEntry: "+measureEntry);
+			}
+
+		// Loop though data:
+		for (const d of this._myDataSource.data) {
+
+			console.log("-- Data "+d+" has follwing entries:");
+			
+			for (const feedEntryDim of this._myDataSource.metadata.feeds.dimensions.values) {
+				const dimValId = d[feedEntryDim].id;
+				const dimValLabel = d[feedEntryDim].label;
+				
+				console.log("--- Dimension feedEntry "+feedEntryDim+" has dimValId: "+dimValId+", dimValLabel: "+dimValLabel);
+			}
+			
+			for (const feedEntryMeas of this._myDataSource.metadata.feeds.measures.values) {
+				const measValRaw = d[feedEntryMeas].raw;
+				const measValFormatted = d[feedEntryMeas].formatted;
+				
+				console.log("--- Measure feedEntry "+feedEntryMeas+" has measValRaw: "+measValRaw+", measValFormatted: "+measValFormatted);
 			}
 		}
 
    
-      const dimension = this._myDataSource.metadata.feeds.dimensions.values[0]
+      // This picks out the first dimension and the first measure and creates the dataset (data) out of it for displaying on the chart:
+	  const dimension = this._myDataSource.metadata.feeds.dimensions.values[0]
       const measure = this._myDataSource.metadata.feeds.measures.values[0]
       const data = this._myDataSource.data.map(data => {
         return {
@@ -81,7 +101,8 @@ var getScriptPromisify = (src) => {
         }
       })
 
-      const myChart = echarts.init(this._root, 'wight')
+      const myChart = echarts.init(this._root)
+//      const myChart = echarts.init(this._root, 'wight')
       const option = {
 /*		   title: {
 			text: 'Customized Pie',
@@ -111,8 +132,17 @@ var getScriptPromisify = (src) => {
             },
             label: {
               show: true,
-              position: 'center'
+              position: 'outside',
+			  formatter: '{b}: {c} ({d})'
             },
+			  emphasis: {
+				itemStyle: {
+				  shadowBlur: 10,
+				  shadowOffsetX: 0,
+				  shadowColor: 'rgba(0, 0, 0, 0.5)'
+				}
+			  },
+/*
             emphasis: {
               label: {
                 show: true,
@@ -120,6 +150,7 @@ var getScriptPromisify = (src) => {
                 fontWeight: 'bold'
               }
             },
+*/
             labelLine: {
               show: true
             },
